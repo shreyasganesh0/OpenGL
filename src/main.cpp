@@ -34,8 +34,44 @@ int main(){
         printf("Failed to initialize GLAD\n");
         return -1;
     }
+    
+    float vertices[] = { 1.0f, 1.0f, 0.0f,  
+                        -1.0f, -0.4f, 0.4f,
+                        -0.3f, 0.7f, 0.43f,
+                        };
+
+    unsigned int VBO;
+
+    glGenBuffers(1, &VBO);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    const char *vertex_shader_code = "#version 330 core\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0";
+
+    unsigned int vertex_shader;
+
+    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+
+    glShaderSource(vertex_shader, 1, &vertex_shader_code, NULL);
+
+    glCompileShader(vertex_shader);
+
+    int success;
+
+    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        printf("Failed to compile shader\n");
+    }
 
     while(!glfwWindowShouldClose(window)){
         processInput(window);
@@ -46,6 +82,7 @@ int main(){
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
+
 
     return 0;
 
