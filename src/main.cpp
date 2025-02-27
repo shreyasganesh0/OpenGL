@@ -50,6 +50,7 @@ int main(){
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    // vertex shader
     const char *vertex_shader_code = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
@@ -72,6 +73,46 @@ int main(){
     if (!success) {
         printf("Failed to compile shader\n");
     }
+
+    //fragment shader
+    const char *fragment_shader_code = "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "}\0";
+
+    unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); 
+
+    glShaderSource(fragment_shader, 1, &fragment_shader_code, NULL);
+
+    glCompileShader(fragment_shader);
+
+    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        printf("Failed to compile fragment shader \n");
+    }
+
+    unsighed int shader_program;
+
+    shader_program = glCreateProgram();
+
+    glAttachShader(shader_program, vertex_shader);
+    glAttachShader(shader_program, fragment_shader);
+    glLinkProgram(shader_program);
+
+
+    glGetShaderiv(shader_program, GL_LINK_STATUS, &success);
+
+    if (!success) {
+        printf("Failed to link shader program\n");
+    }
+
+    glUseProgram(shader_program);
+
+    glDeleteShader(vertex_shader);
+    glDeleteShader(fragment_shader);
 
     while(!glfwWindowShouldClose(window)){
         processInput(window);
