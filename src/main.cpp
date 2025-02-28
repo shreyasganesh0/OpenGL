@@ -94,6 +94,7 @@ int main(){
         printf("Failed to compile fragment shader \n");
     }
 
+    //shader program
     unsighed int shader_program;
 
     shader_program = glCreateProgram();
@@ -108,6 +109,13 @@ int main(){
     if (!success) {
         printf("Failed to link shader program\n");
     }
+
+
+    //vertex shader attrs
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+
+    glEnableAttribArray(0);
+
 
     glUseProgram(shader_program);
 
